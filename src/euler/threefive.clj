@@ -13,3 +13,5 @@
     (filter 
       #(or ((divisible-by 3) %) ((divisible-by 5) %))
       (range below-this))))
+
+(mult-3-5 1000)
