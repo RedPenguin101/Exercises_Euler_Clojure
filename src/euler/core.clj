@@ -47,3 +47,56 @@
      (if (every? #(divisible-by? number %) numbers)
        number
        (recur (inc number) divisor-range)))))
+
+;; Problem 6: The sum of the squares of the first 10 natural numbers is
+;;           1^2 + 2^2 + ... + 10^2 = 385
+;; The sum of the square of the first 10 numbers is
+;;           (1 + 2 + ... + 10)^2 = 55^2 = 3025
+;; Hence the difference between the two is 3025-385 = 2640
+;; find the difference for the the first 100 numbers
+
+(defn ** [n x] (reduce * (repeat x n)))
+
+(defn square [x] (** x 2))
+
+(defn sum-of-squares
+  [number]
+  (reduce #(+ %1 (square %2)) (range 1 (inc number))))
+
+(defn square-of-sums
+  [number]
+  (square (reduce + (range (inc number)))))
+
+;; Problem 7: 10001st Prime
+
+(defn add-if-prime [n primes]
+  (if (some #(divisible-by? n %) primes)
+    primes
+    (conj primes n)))
+
+(defn primes-to
+  ([length] (primes-to [2] 3 (dec length)))
+  ([primes start desired-length]
+   (if (> (count primes) desired-length)
+     primes
+     (recur (add-if-prime start primes) (+ 2 start) desired-length))))
+
+;; A pythagorean triplet is a set of three natural numbers a<b<c
+;; such that a^2 + b^2 = c^2
+;; like 3 4 5
+;; there is one triplet such that a+b+c=1000. Find the product abc
+
+(defn pythag [a b]
+  (Math/sqrt (+ (square a) (square b))))
+
+(defn py-sum-to [a]
+  #(= a (+ %1 %2 (pythag %1 %2))))
+
+(def py-sum-to-1000 (py-sum-to 1000.0))
+
+(defn find-pyth-trip-with-sum
+  [n]
+  (for [a (range 1 (/ (- n 3) 3))
+        b (range 1 (/ (- n a) 2))
+        :when ((py-sum-to (double n)) a b)]
+    [(double a) (double b) (pythag a b)]))
