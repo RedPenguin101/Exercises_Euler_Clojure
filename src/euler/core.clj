@@ -74,8 +74,8 @@
     primes
     (conj primes n)))
 
-(defn primes-to
-  ([length] (primes-to [2] 3 (dec length)))
+(defn primes-to-length
+  ([length] (primes-to-length [2] 3 (dec length)))
   ([primes start desired-length]
    (if (> (count primes) desired-length)
      primes
@@ -100,3 +100,24 @@
         b (range 1 (/ (- n a) 2))
         :when ((py-sum-to (double n)) a b)]
     [(double a) (double b) (pythag a b)]))
+
+;; Problem 10: Find the sum of all primes below 2000000
+;; Note, modification of previous is waaay to slow. Used sieve of Eratosthenes
+
+(defn primes-to-size
+  ([max-size] (primes-to-size [2] 3 max-size))
+  ([primes start max-size]
+   (if (> (last primes) max-size)
+     (butlast primes)
+     (recur (add-if-prime start primes) (+ 2 start) max-size))))
+
+(def not-divisible-by? (complement divisible-by?))
+
+(defn prime-sieve
+  ([max-size] (prime-sieve [] (range 2 (inc max-size)) (int (Math/sqrt max-size))))
+  ([primes integer-list stop-at]
+   (if (> (first integer-list) stop-at)
+     (concat primes integer-list)
+     (let [[next-prime & ints-to-test] integer-list
+           new-primes (conj primes next-prime)]
+       (recur new-primes (doall (filter #(not-divisible-by? % next-prime) ints-to-test)) stop-at)))))
