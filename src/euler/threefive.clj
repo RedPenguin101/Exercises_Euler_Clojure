@@ -15,3 +15,8 @@
       (range below-this))))
 
 (mult-3-5 1000)
+
+(defn mult-3-5? [num]
+  (some zero? (map #(mod num %) [3 5])))
+
+(reduce + (filter mult-3-5? (range 1000)))

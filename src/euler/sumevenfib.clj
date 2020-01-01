@@ -20,3 +20,11 @@
 (defn sum-even-fib
   [below-this]
   (reduce + (filter even? (fib-below 4000000))))
+
+(sum-even-fib 1)
+
+(defn fib 
+  ([] (fib 1 2))
+  ([n m] (cons n (lazy-seq (fib m (+ n m))))))
+
+(reduce + (take-while #(< % 4000000) (filter even? (fib))))
